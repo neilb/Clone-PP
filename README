@@ -1,0 +1,55 @@
+NAME
+    Clone::PP - Recursively copy Perl datatypes
+
+SYNOPSIS
+      use Clone::PP qw(clone);
+  
+      $a = { 'foo' => 'bar', 'move' => 'zig' };
+      $b = [ 'alpha', 'beta', 'gamma', 'vlissides' ];
+      $c = new Foo();
+  
+      $d = clone($a);
+      $e = clone($b);
+      $f = clone($c);
+  
+      # or
+  
+      use Clone::PP;
+      push @Foo::ISA, 'Clone';
+  
+      $a = new Foo;
+      $b = $a->clone();
+
+DESCRIPTION
+    This module provides a clone() method which makes recursive copies of
+    nested hash, array, scalar and reference types, including tied variables
+    and objects.
+
+    The clone() function takes a scalar argument and an optional parameter
+    that can be used to limit the depth of the copy. To duplicate lists,
+    arrays or hashes, pass them in by reference. e.g.
+
+      my $copy = clone (\@array);
+      # or
+      my %copy = %{ clone (\%hash) };  
+
+SEE ALSO
+    For a faster implementation in XS, see the Clone manpage.
+
+    For a slower, but more flexible solution use the dclone function from
+    <Storable>.
+
+CREDITS AND COPYRIGHT
+    Developed by Matthew Simon Cavalletto, simonm@cavalletto.org. Mode
+    modules from Evolution Softworks are available at www.evoscript.org.
+    Copyright 2003 Matthew Simon Cavalletto.
+
+    Interface based on Clone by Ray Finch, rdf@cpan.org. Portions Copyright
+    2001 Ray Finch.
+
+    Code based on initial design from Ref.pm. Portions Copyright 1994 David
+    Muir Sharnoff.
+
+    This module is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+

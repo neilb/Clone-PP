@@ -2,11 +2,12 @@ package Clone::PP;
 
 use strict;
 use vars qw($VERSION @EXPORT_OK);
+use Exporter;
 
-$VERSION = 1.00;
+$VERSION = 1.01;
 
 @EXPORT_OK = qw( clone );
-sub import { require Exporter and goto &Exporter::import } # lazy Exporter
+sub import { goto &Exporter::import } # lazy Exporter
 
 # These methods can be temporarily overriden to work with a given class.
 use vars qw( $CloneSelfMethod $CloneInitMethod );
@@ -32,18 +33,17 @@ sub clone {
   
   return $CloneCache{ $source } if ( exists $CloneCache{ $source } );
   
-  # Some objects would prefer to clone themselves; check for clone_self().
-  return $CloneCache{ $source } = $source->$CloneSelfMethod() 
-				 if UNIVERSAL::can($source, $CloneSelfMethod);
-  
   # Non-reference values are copied shallowly
   my $ref_type = ref $source or return $source;
   
-  # Extract both structure type and class name of referent
+  # Extract both the structure type and the class name of referent
   my $class_name;
   if ( "$source" =~ /^\Q$ref_type\E\=([A-Z]+)\(0x[0-9a-f]+\)$/ ) {
     $class_name = $ref_type;
     $ref_type = $1;
+    # Some objects would prefer to clone themselves; check for clone_self().
+    return $CloneCache{ $source } = $source->$CloneSelfMethod() 
+				  if $source->can($CloneSelfMethod);
   }
   
   # To make a copy:
@@ -54,23 +54,19 @@ sub clone {
   
   my $copy;
   if ($ref_type eq 'HASH') {
-    $copy = {};
-    $CloneCache{ $source } = $copy;
+    $CloneCache{ $source } = $copy = {};;
     if ( my $tied = tied( %$source ) ) { tie %$copy, ref $tied }
-    %$copy = map { clone($_, $depth) } %$source;
+    %$copy = map { ! ref($_) ? $_ : clone($_, $depth) } %$source;
   } elsif ($ref_type eq 'ARRAY') {
-    $copy = [];
-    $CloneCache{ $source } = $copy;
+    $CloneCache{ $source } = $copy = [];
     if ( my $tied = tied( @$source ) ) { tie @$copy, ref $tied }
-    @$copy = map { clone($_, $depth) } @$source;
+    @$copy = map { ! ref($_) ? $_ : clone($_, $depth) } @$source;
   } elsif ($ref_type eq 'REF' or $ref_type eq 'SCALAR') {
-    $copy = \( my $var = "" );
+    $CloneCache{ $source } = $copy = \( my $var = "" );
     if ( my $tied = tied( $$source ) ) { tie $$copy, ref $tied }
-    $CloneCache{ $source } = $copy;
     $$copy = clone($$source, $depth);
   } else {
-    $copy = $source;
-    $CloneCache{ $source } = $copy;
+    $CloneCache{ $source } = $copy = $source;
   }
   
   # - Bless it into the same class as the original, if it was blessed;
