@@ -4,7 +4,7 @@ use strict;
 use vars qw($VERSION @EXPORT_OK);
 use Exporter;
 
-$VERSION = 1.01;
+$VERSION = 1.02;
 
 @EXPORT_OK = qw( clone );
 sub import { goto &Exporter::import } # lazy Exporter
@@ -21,12 +21,9 @@ use vars qw( %CloneCache );
 sub clone {
   my $source = shift;
   
-  # Optional depth limiting -- after this many levels, do shallow copy.
+  # Optional depth limit: after a given number of levels, do shallow copy.
   my $depth = shift;
-  if ( defined $depth ) { 
-    return $source if $depth < 1;
-    $depth --;
-  }
+  return $source if ( defined $depth and $depth -- < 1 );
   
   # Maintain a shared cache during recursive calls, then clear it at the end.
   local %CloneCache = ( undef => undef ) unless ( exists $CloneCache{undef} );
@@ -54,7 +51,7 @@ sub clone {
   
   my $copy;
   if ($ref_type eq 'HASH') {
-    $CloneCache{ $source } = $copy = {};;
+    $CloneCache{ $source } = $copy = {};
     if ( my $tied = tied( %$source ) ) { tie %$copy, ref $tied }
     %$copy = map { ! ref($_) ? $_ : clone($_, $depth) } %$source;
   } elsif ($ref_type eq 'ARRAY') {
@@ -66,6 +63,7 @@ sub clone {
     if ( my $tied = tied( $$source ) ) { tie $$copy, ref $tied }
     $$copy = clone($$source, $depth);
   } else {
+    # Shallow copy anything else; this handles a reference to code, glob, regex
     $CloneCache{ $source } = $copy = $source;
   }
   
@@ -91,55 +89,85 @@ Clone::PP - Recursively copy Perl datatypes
 
   use Clone::PP qw(clone);
   
-  $a = { 'foo' => 'bar', 'move' => 'zig' };
-  $b = [ 'alpha', 'beta', 'gamma', 'vlissides' ];
-  $c = new Foo();
+  $item = { 'foo' => 'bar', 'move' => [ 'zig', 'zag' ]  };
+  $copy = clone( $item );
+
+  $item = [ 'alpha', 'beta', { 'gamma' => 'vlissides' } ];
+  $copy = clone( $item );
+
+  $item = Foo->new();
+  $copy = clone( $item );
+
+Or as an object method:
+
+  require Clone::PP;
+  push @Foo::ISA, 'Clone::PP';
   
-  $d = clone($a);
-  $e = clone($b);
-  $f = clone($c);
-  
-  # or
-  
-  use Clone::PP;
-  push @Foo::ISA, 'Clone';
-  
-  $a = new Foo;
-  $b = $a->clone();
+  $item = Foo->new();
+  $copy = $item->clone();
 
 =head1 DESCRIPTION
 
-This module provides a clone() method which makes recursive
-copies of nested hash, array, scalar and reference types, 
-including tied variables and objects.
+This module provides a general-purpose clone function to make deep
+copies of Perl data structures. It calls itself recursively to copy
+nested hash, array, scalar and reference types, including tied
+variables and objects.
 
-The clone() function takes a scalar argument and an optional parameter that 
-can be used to limit the depth of the copy. To duplicate lists,
-arrays or hashes, pass them in by reference. e.g.
-    
-  my $copy = clone (\@array);
-  # or
-  my %copy = %{ clone (\%hash) };  
+The clone() function takes a scalar argument to copy. To duplicate
+arrays or hashes, pass them in by reference:
+
+  my $copy = clone(\@array);    my @copy = @{ clone(\@array) };
+  my $copy = clone(\%hash);     my %copy = %{ clone(\%hash) };
+
+The clone() function also accepts an optional second parameter that
+can be used to limit the depth of the copy. If you pass a limit of
+0, clone will return the same value you supplied; for a limit of
+1, a shallow copy is constructed; for a limit of 2, two layers of
+copying are done, and so on.
+
+  my $shallow_copy = clone( $item, 1 );
+
+To allow objects to intervene in the way they are copied, the
+clone() function checks for a couple of optional methods. If an
+object provides a method named C<clone_self>, it is called and the
+result returned without further processing. Alternately, if an
+object provides a method named C<clone_init>, it is called on the
+copied object before it is returned.
+
+=head1 BUGS
+
+Some data types, such as globs, regexes, and code refs, are always copied shallowly.
+
+References to hash elements are not properly duplicated. (This is why two tests in t/dclone.t that are marked "todo".) For example, the following test should succeed but does not:
+
+  my $hash = { foo => 1 }; 
+  $hash->{bar} = \{ $hash->{foo} }; 
+  my $copy = clone( \%hash ); 
+  $hash->{foo} = 2; 
+  $copy->{foo} = 2; 
+  ok( $hash->{bar} == $copy->{bar} );
+
+To report bugs via the CPAN web tracking system, go to 
+C<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Clone-PP> or send mail 
+to C<Dist=Clone-PP#rt.cpan.org>, replacing C<#> with C<@>.
 
 =head1 SEE ALSO
 
-For a faster implementation in XS, see L<Clone>. 
-
-For a slower, but more flexible solution use the dclone function from <Storable>.
+For a faster implementation in XS, see L<Clone/clone>, L<Util/clone>, or <Storable/dclone>.
 
 =head1 CREDITS AND COPYRIGHT
 
-Developed by Matthew Simon Cavalletto, simonm@cavalletto.org. 
-Mode modules from Evolution Softworks are available at www.evoscript.org.
-Copyright 2003 Matthew Simon Cavalletto. 
+Developed by Matthew Simon Cavalletto at Evolution Softworks. 
+More free Perl software is available at C<www.evoscript.org>.
 
-Interface based on Clone by Ray Finch, rdf@cpan.org. 
-Portions Copyright 2001 Ray Finch.
+Copyright 2003 Matthew Simon Cavalletto. You may contact the author
+directly at C<evo@cpan.org> or C<simonm@cavalletto.org>.
 
-Code based on initial design from Ref.pm. 
-Portions Copyright 1994 David Muir Sharnoff.
+Code initially derived from Ref.pm. Portions Copyright 1994 David Muir Sharnoff.
 
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself.
+Interface based by Clone by Ray Finch with contributions from chocolateboy.
+Portions Copyright 2001 Ray Finch. Portions Copyright 2001 chocolateboy. 
+
+You may use, modify, and distribute this software under the same terms as Perl.
 
 =cut
