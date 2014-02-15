@@ -9,7 +9,7 @@ $VERSION = 1.02;
 @EXPORT_OK = qw( clone );
 sub import { goto &Exporter::import } # lazy Exporter
 
-# These methods can be temporarily overriden to work with a given class.
+# These methods can be temporarily overridden to work with a given class.
 use vars qw( $CloneSelfMethod $CloneInitMethod );
 $CloneSelfMethod ||= 'clone_self';
 $CloneInitMethod ||= 'clone_init';
@@ -45,7 +45,7 @@ sub clone {
   
   # To make a copy:
   # - Prepare a reference to the same type of structure;
-  # - Store it in the cache, to avoid looping it it refers to itself;
+  # - Store it in the cache, to avoid looping if it refers to itself;
   # - Tie in to the same class as the original, if it was tied;
   # - Assign a value to the reference by cloning each item in the original;
   
