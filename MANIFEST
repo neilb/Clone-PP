@@ -1,6 +1,6 @@
 MANIFEST
 Makefile.PL
-PP.pm
+lib/Clone/PP.pm
 t/01array.t
 t/02hash.t
 t/03scalar.t
