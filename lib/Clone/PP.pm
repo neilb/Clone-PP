@@ -1,6 +1,7 @@
 package Clone::PP;
 
 use strict;
+use warnings;
 use vars qw($VERSION @EXPORT_OK);
 use Exporter;
 
@@ -20,6 +21,8 @@ use vars qw( %CloneCache );
 # Generic cloning function
 sub clone {
   my $source = shift;
+
+  return undef if not defined($source);
   
   # Optional depth limit: after a given number of levels, do shallow copy.
   my $depth = shift;
@@ -28,7 +31,7 @@ sub clone {
   # Maintain a shared cache during recursive calls, then clear it at the end.
   local %CloneCache = ( undef => undef ) unless ( exists $CloneCache{undef} );
   
-  return $CloneCache{ $source } if ( exists $CloneCache{ $source } );
+  return $CloneCache{ $source } if ( defined $CloneCache{ $source } );
   
   # Non-reference values are copied shallowly
   my $ref_type = ref $source or return $source;
