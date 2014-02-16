@@ -27,5 +27,15 @@ WriteMakefile(
         : ()
     ),
 
+    ($mm_ver >= 6.64
+        ? (TEST_REQUIRES => {
+               'Test::Array'  => 0,
+               'Data::Dumper' => 0,
+               'Benchmark'    => 0,
+               'Carp'         => 0,
+          })
+        : ()
+    ),
+
 );
 

@@ -8,6 +8,7 @@ Revision history for Perl module Clone::PP
     - Added license type to metadata and renamed L&C section in pod
     - Expanded the SEE ALSO section
     - Added prereqs to PREREQ_PM in Makefile.PL
+    - Added test prereqs in TEST_REQUIRES
 
 1.02 2003-08-28
 
