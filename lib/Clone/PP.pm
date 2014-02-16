@@ -157,7 +157,17 @@ to C<Dist=Clone-PP#rt.cpan.org>, replacing C<#> with C<@>.
 
 =head1 SEE ALSO
 
-For a faster implementation in XS, see L<Clone/clone>, L<Util/clone>, or <Storable/dclone>.
+L<Clone> - a baseclass which provides a C<clone()> method.
+
+L<MooseX::Clone> - find-grained cloning for Moose objects.
+
+The C<dclone()> function in L<Storable>.
+
+L<Data::Clone> -
+polymorphic data cloning (see its documentation for what that means).
+
+L<Clone::Any> - use whichever of the cloning methods is available.
+
 
 =head1 AUTHOR AND CREDITS
 
