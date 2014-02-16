@@ -159,10 +159,13 @@ to C<Dist=Clone-PP#rt.cpan.org>, replacing C<#> with C<@>.
 
 For a faster implementation in XS, see L<Clone/clone>, L<Util/clone>, or <Storable/dclone>.
 
-=head1 CREDITS AND COPYRIGHT
+=head1 AUTHOR AND CREDITS
 
 Developed by Matthew Simon Cavalletto at Evolution Softworks. 
 More free Perl software is available at C<www.evoscript.org>.
+
+
+=head1 COPYRIGHT AND LICENSE
 
 Copyright 2003 Matthew Simon Cavalletto. You may contact the author
 directly at C<evo@cpan.org> or C<simonm@cavalletto.org>.

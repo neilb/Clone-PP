@@ -5,6 +5,7 @@ Revision history for Perl module Clone::PP
     - Fixed typos from dsteinbrunner in RT#86337
     - Added "use warnings" and in the process fixed RT#17121
     - Min perl version 5.6.0 in code and metadata
+    - Added license type to metadata and renamed L&C section in pod
 
 1.02 2003-08-28
 

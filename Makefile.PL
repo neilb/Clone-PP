@@ -15,5 +15,10 @@ WriteMakefile(
         : ()
     ),
 
+    ($mm_ver >= 6.31
+        ? (LICENSE => 'perl_5')
+        : ()
+    ),
+
 );
 
