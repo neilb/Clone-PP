@@ -1,6 +1,6 @@
 Revision history for Perl module Clone::PP
 
-1.03
+1.03 2014-02-16 NEILB
     - Added Changes file
     - Fixed typos from dsteinbrunner in RT#86337
     - Added "use warnings" and in the process fixed RT#17121
