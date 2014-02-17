@@ -168,6 +168,9 @@ polymorphic data cloning (see its documentation for what that means).
 
 L<Clone::Any> - use whichever of the cloning methods is available.
 
+=head1 REPOSITORY
+
+L<https://github.com/neilbowers/Clone-PP>
 
 =head1 AUTHOR AND CREDITS
 
