@@ -1,5 +1,8 @@
 Revision history for Perl module Clone::PP
 
+1.05 2014-02-17 NEILB
+    - Added github repo to metadata (thanks dsteinbrunner)
+
 1.04 2014-02-17 NEILB
     - I had erroneously listed Test::Array as a test prereq,
       but the package is defined in 01array.t where it's used.

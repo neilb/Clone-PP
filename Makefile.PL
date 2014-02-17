@@ -36,16 +36,20 @@ WriteMakefile(
         : ()
     ),
 
-    META_MERGE => {
-        'meta-spec' => { version => 2 },
-        resources => {
-            repository => {
-                type => 'git',
-                url  => 'https://github.com/neilbowers/Clone-PP.git',
-                web  => 'https://github.com/neilbowers/Clone-PP',
+    ($mm_ver <= 6.45
+        ? ()
+        : (META_MERGE => {
+            'meta-spec' => { version => 2 },
+            resources => {
+                bugtracker  => 'http://rt.cpan.org/Public/Dist/Display.html?Name=Clone-PP',
+                repository  => {
+                    type => 'git',
+                    web  => 'https://github.com/neilbowers/Clone-PP',
+                    url  => 'git://github.com/neilbowers/Clone-PP.git',
+                },
             },
-        },
-    },
+          })
+    ),
 
 );
 
