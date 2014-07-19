@@ -1,6 +1,6 @@
 Revision history for Perl module Clone::PP
 
-1.06 2014-07-18 NEILB
+1.06 2014-07-19 NEILB
     - Changed the copyright on dclone.t, dump.pl, and tied.pl in t/,
       to match the rest of the dist, "same as perl itself".
       These changes were approved by the copyright owner, Raphael Manfredi.
