@@ -1,10 +1,10 @@
-;# Id: dump.pl,v 0.7 2000/08/03 22:04:45 ram Exp 
+;# Id: dump.pl,v 0.7 2000/08/03 22:04:45 ram Exp
 ;#
 ;#  Copyright (c) 1995-2000, Raphael Manfredi
-;#  
+;#
 ;#  You may redistribute this file under the same terms as Perl 5 itself.
 ;#
-;# Log: dump.pl,v 
+;# Log: dump.pl,v
 ;# Revision 0.7  2000/08/03 22:04:45  ram
 ;# Baseline for second beta release.
 ;#
@@ -27,7 +27,7 @@ use Carp;
 );
 
 # Given an object, dump its transitive data closure
-sub main'dump {
+sub main::dump {
 	my ($object) = @_;
 	croak "Not a reference!" unless ref($object);
 	local %dumped;
