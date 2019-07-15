@@ -37,14 +37,16 @@ sub clone {
   # Non-reference values are copied shallowly
   my $ref_type = ref $source or return $source;
   
+  # Some objects would prefer to clone themselves; check for clone_self(),
+  # while allowing objects with overloaded stringification to clone themselves.
+  if ( eval { $source->can($CloneSelfMethod) } ) {
+    return $CloneCache{ $source } = $source->$CloneSelfMethod() 
+  }
   # Extract both the structure type and the class name of referent
   my $class_name;
   if ( "$source" =~ /^\Q$ref_type\E\=([A-Z]+)\(0x[0-9a-f]+\)$/ ) {
     $class_name = $ref_type;
     $ref_type = $1;
-    # Some objects would prefer to clone themselves; check for clone_self().
-    return $CloneCache{ $source } = $source->$CloneSelfMethod() 
-				  if $source->can($CloneSelfMethod);
   }
   
   # To make a copy:
