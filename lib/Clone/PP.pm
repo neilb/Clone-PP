@@ -3,21 +3,19 @@ package Clone::PP;
 use 5.006;
 use strict;
 use warnings;
-use vars qw($VERSION @EXPORT_OK);
 use Exporter;
 
-$VERSION = 1.08;
+our $VERSION = 1.08;
 
-@EXPORT_OK = qw( clone );
+our @EXPORT_OK = qw( clone );
 sub import { goto &Exporter::import } # lazy Exporter
 
 # These methods can be temporarily overridden to work with a given class.
-use vars qw( $CloneSelfMethod $CloneInitMethod );
-$CloneSelfMethod ||= 'clone_self';
-$CloneInitMethod ||= 'clone_init';
+our $CloneSelfMethod ||= 'clone_self';
+our $CloneInitMethod ||= 'clone_init';
 
 # Used to detect looped networks and avoid infinite recursion. 
-use vars qw( %CloneCache );
+our %CloneCache;
 
 # Generic cloning function
 sub clone {
