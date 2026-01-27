@@ -44,7 +44,7 @@ sub clone {
     $ref_type = $1;
     # Some objects would prefer to clone themselves; check for clone_self().
     return $CloneCache{ $source } = $source->$CloneSelfMethod() 
-				  if $source->can($CloneSelfMethod);
+                                  if $source->can($CloneSelfMethod);
   }
   
   # To make a copy:

@@ -53,7 +53,7 @@ $c = bless {}, CLASS;
 $c->{attribute} = 'attrval';
 %a = ('key', 'value', 1, 0, $a, $b, 'cvar', \$c);
 @a = ('first', undef, 3, -4, -3.14159, 456, 4.5,
-	$b, \$a, $a, $c, \$c, \%a);
+    $b, \$a, $a, $c, \$c, \%a);
 
 print "not " unless defined ($aref = clone(\@a));
 print "ok 1\n";
@@ -74,9 +74,9 @@ print "ok 4\n";
 package FOO; @ISA = qw(Clone::PP);
 
 sub make {
-	my $self = bless {};
-	$self->{key} = \%main::a;
-	return $self;
+    my $self = bless {};
+    $self->{key} = \%main::a;
+    return $self;
 };
 
 package main;

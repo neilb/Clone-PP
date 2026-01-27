@@ -7,7 +7,7 @@ if ($mm_ver =~ /_/) { # dev version
 }
 
 WriteMakefile(
-    'NAME'	=> 'Clone::PP',
+    'NAME'         => 'Clone::PP',
     'VERSION_FROM' => 'lib/Clone/PP.pm', 
 
     PREREQ_PM      => {
