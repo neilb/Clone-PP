@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Exporter;
 
-our $VERSION = 1.08;
+our $VERSION = 1.09;
 
 our @EXPORT_OK = qw( clone );
 sub import { goto &Exporter::import } # lazy Exporter
@@ -173,8 +173,8 @@ L<https://github.com/neilbowers/Clone-PP>
 =head1 AUTHOR AND CREDITS
 
 Developed by Matthew Simon Cavalletto at Evolution Softworks. 
-More free Perl software is available at C<www.evoscript.org>.
 
+Currently maintained by Neil Bowers (NEILB).
 
 =head1 COPYRIGHT AND LICENSE
 
